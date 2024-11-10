@@ -1,0 +1,13 @@
+[package]
+name = "weapon_smith_plugin"
+version = "0.1.0"
+authors = ["AsteRisk <sonydevteam4@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+horizon-plugin-api = "0.1.6"
+horizon_data_types = "0.3.0"
+socketioxide = "0.15.1"
+uuid = { version = "1.2", features = ["v4"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
