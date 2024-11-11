@@ -1,10 +1,6 @@
-pub mod structs;
-
-
-
-pub use structs::player_inventory::PlayerInventory;
-pub use structs::storage_container::StorageContainer;
-pub use structs::weapon_smith::WeaponSmith;
-pub use structs::weapon_parts::WeaponPartsList;
-pub use structs::weapons_list::WeaponsList;
-pub use structs::item::WeaponItem;
+pub mod player_inventory;
+pub mod storage_container;
+pub mod weapon_smith;
+pub mod weapon_parts_list;
+pub mod weapons_list;
+pub mod item;

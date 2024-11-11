@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::weapon_item::WeaponItem;
+use crate::item::WeaponItem;
 
 /// Represents a player's inventory with a fixed number of slots.
 ///

@@ -233,9 +233,12 @@ checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
 
 [[package]]
 name = "horizon-plugin-api"
-version = "0.1.2"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1963e8c31937cdd74c102cb92559c1ad9fb9b9aa2f49fef732136339672c47ef"
+checksum = "a9192ea91c164b91079917f0367092a8ef13bae371ab4c4ac67deeb13b1fe64f"
+dependencies = [
+ "socketioxide",
+]
 
 [[package]]
 name = "horizon_data_types"
@@ -717,15 +720,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "test_plugin"
-version = "0.1.0"
-dependencies = [
- "horizon-plugin-api",
- "horizon_data_types",
- "socketioxide",
-]
-
-[[package]]
 name = "thiserror"
 version = "1.0.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -841,6 +835,20 @@ name = "wasi"
 version = "0.11.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+
+[[package]]
+name = "weapon_smith_plugin"
+version = "0.1.0"
+dependencies = [
+ "horizon-plugin-api",
+ "horizon_data_types",
+ "log",
+ "paste",
+ "serde",
+ "serde_json",
+ "socketioxide",
+ "uuid",
+]
 
 [[package]]
 name = "wide"

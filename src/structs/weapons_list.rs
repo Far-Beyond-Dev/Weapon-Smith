@@ -1,36 +1,43 @@
+//-----------------------------------------------------------------------------
 // Define weapon constants using their unique ID
+//-----------------------------------------------------------------------------
 
 // Projectile based weapons
-pub const ASSAULT_RIFLE: u32 = 1;  // p1
-pub const SHOTGUN: u32 = 2;        // p2
-pub const PISTOL: u32 = 3;         // p3
-pub const SNIPER_RIFLE: u32 = 4;   // p4
-pub const MACHINE_GUN: u32 = 17;   // p5
-pub const ROCKET_LAUNCHER: u32 = 18; // p6
+pub const ASSAULT_RIFLE: u32 = 1;       // p1
+pub const SHOTGUN: u32 = 2;             // p2
+pub const PISTOL: u32 = 3;              // p3
+pub const SNIPER_RIFLE: u32 = 4;        // p4
+pub const MACHINE_GUN: u32 = 17;        // p5
+pub const ROCKET_LAUNCHER: u32 = 18;    // p6
 
 // Ranged weapons
-pub const BOW: u32 = 5;            // r1
-pub const CROSSBOW: u32 = 6;       // r2
-pub const THROWING_KNIFE: u32 = 19; // r3
-pub const SLINGSHOT: u32 = 20;     // r4
+pub const BOW: u32 = 5;                 // r1
+pub const CROSSBOW: u32 = 6;            // r2
+pub const THROWING_KNIFE: u32 = 19;     // r3
+pub const SLINGSHOT: u32 = 20;          // r4
 
 // Melee weapons
-pub const SWORD: u32 = 7;          // m1
-pub const HAMMER: u32 = 8;         // m2
-pub const AXE: u32 = 9;            // m3
-pub const SPEAR: u32 = 10;         // m4
-pub const DAGGER: u32 = 11;        // m5
-pub const FLAIL: u32 = 21;         // m6
-pub const MACE: u32 = 22;          // m7
+pub const SWORD: u32 = 7;               // m1
+pub const HAMMER: u32 = 8;              // m2
+pub const AXE: u32 = 9;                 // m3
+pub const SPEAR: u32 = 10;              // m4
+pub const DAGGER: u32 = 11;             // m5
+pub const FLAIL: u32 = 21;              // m6
+pub const MACE: u32 = 22;               // m7
 
 // Spells
-pub const FIREBALL: u32 = 12;      // s1
-pub const LIGHTNING_BOLT: u32 = 13;// s2
-pub const ICE_SPIKE: u32 = 14;     // s3
-pub const HEALING_AURA: u32 = 15;  // s4
-pub const WIND_GUST: u32 = 16;     // s5
-pub const EARTHQUAKE: u32 = 23;    // s6
-pub const WATER_BARRIER: u32 = 24; // s7
+pub const FIREBALL: u32 = 12;           // s1
+pub const LIGHTNING_BOLT: u32 = 13;     // s2
+pub const ICE_SPIKE: u32 = 14;          // s3
+pub const HEALING_AURA: u32 = 15;       // s4
+pub const WIND_GUST: u32 = 16;          // s5
+pub const EARTHQUAKE: u32 = 23;         // s6
+pub const WATER_BARRIER: u32 = 24;      // s7
+
+//-----------------------------------------------------------------------------
+// Define weapon data types
+//-----------------------------------------------------------------------------
+
 
 // WeaponsList struct
 use std::collections::HashMap;

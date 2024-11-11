@@ -1,4 +1,4 @@
-use super::{WeaponsList, Ammo, WeaponTypes, WeaponPart};
+use crate::{weapons_list::WeaponsList, item::Ammo, weapons_list::WeaponTypes, weapon_parts_list::WeaponPart};
 
 #[derive(Default)]
 pub struct WeaponSmith {
