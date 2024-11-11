@@ -1,131 +1,155 @@
 # Weapon_Smith
- 
+
 ### Introduction
 
-The `Weapon_Smith` system is a new and advanced modular plugin built for the `Horizon-Community-Edition` game server. It is implemented using Rust and is designed to facilitate a wide range of weapon-related functionality, including weapon crafting, inventory management, part assembly, and storage. This plugin interacts seamlessly with an Unreal Engine 5.4+ client and a PebbleVault spatial database to create a sophisticated in-game experience for both players and developers.
+The `Weapon_Smith` system is a server-side plugin library built for the `Horizon-Community-Edition` game server. Implemented in Rust, it provides comprehensive weapon-related functionality including weapon crafting, part assembly, and weapon management. The plugin can either integrate with the official Horizon inventory plugin or use its own built-in inventory system via feature flags. It is designed to be used by a custom server-side game plugin, which handles the actual game logic and client interactions.
+
+### Installation
+
+1. Drop the plugin into your Horizon server's `plugins` directory:
+```bash
+Horizon-Community-Edition/
+└── plugins/
+    └── weapon_smith/
+```
+
+2. Horizon will automatically code-generate the necessary import file to load the plugin with default settings.
+
+3. To enable the built-in inventory system, modify the plugin's `Cargo.toml` to include the feature in default features:
+
+```toml
+[package]
+name = "weapon_smith"
+version = "0.1.0"
+
+[features]
+default = ["inventory_plugin"]  # Enable built-in inventory by default
+inventory_plugin = []           # Built-in inventory system
+unreal_engine_horizon = []      # Reserved for future use
+skillscript = []                # Reserved for future use
+```
+
+### Architecture Overview
+
+The Weapon_Smith plugin operates as a library that:
+- Can either:
+  - Integrate with the official Horizon inventory plugin for item storage and management, or
+  - Use its own built-in inventory system when enabled via the `inventory_plugin` feature flag
+- Provides weapon crafting and management capabilities to the server-side game plugin
+- Functions entirely server-side, with no direct client communication
+- Maintains weapon definitions, parts lists, and crafting logic
 
 ### Directory Structure
 
-The `Weapon_Smith` plugin is structured under the `Horizon-Community-Edition` and owned by horizon until otherwise given notice as follows however for now its owned by them so dont try to steal this we will find you and throw rocks at you lol.:
-
 ```
 Horizon-Community-Edition/
-├── Weapon_Smith/
-│   ├── src/
-│   │   ├── lib.rs
-│   │   ├── structs/
-│   │   │   ├── weapon_smith.rs
-│   │   │   ├── weapon_parts.rs
-│   │   │   ├── weapon_list.rs
-│   │   │   ├── weapon_bench.rs
-│   │   │   ├── player_inventory.rs
-│   │   │   ├── storage_container.rs
-│   │   │   ├── item.rs
-│   │   ├── crafting/
-│   │   │   ├── craft.rs
-│   │   ├── tests/
-│   │   │   ├── tests.rs
-├── README.md
+└── plugins/
+    └── weapon_smith/
+        ├── src/
+        │   ├── lib.rs                 # Plugin library entry point and feature handling
+        │   ├── mod.rs                 # Module definitions
+        │   ├── weapons_list.rs        # Weapon definitions and properties
+        │   ├── weapon_parts_list.rs   # Weapon parts catalog
+        │   ├── weapon_smith.rs        # Core weapon management logic
+        │   ├── storage_container.rs   # Storage container implementation
+        │   ├── player_inventory.rs    # Built-in inventory implementation
+        │   └── item.rs                # Base weapon item definitions
+        └── Cargo.toml                 # Plugin manifest and feature configuration
 ```
 
-### Detailed Changes and New Features
+### Feature Configuration
 
-**1. Weapon_Smith Plugin Design and Core Functionality**
+The plugin's features are configured through its `Cargo.toml` file. The built-in inventory system can be enabled by including `inventory_plugin` in the default features:
 
-The `Weapon_Smith` plugin has been built from scratch to provide a more comprehensive, flexible, and expandable weapon management system for the game. The main changes are as follows:
-
-- **WeaponSmith Struct**: 
-  - The `WeaponSmith` struct is the heart of the plugin. It represents the fundamental details about any weapon within the game world. This struct includes properties like `weapon_id`, `ammo`, `weapon_types`, `level_requirement`, and `weapons_list` to maintain a connection with the complete inventory.
-  - The `weapon_id` field provides a unique identifier for each weapon based on data from the `weapon_list.rs`.
-
-**2. WeaponsList and WeaponEntry Structures**
-
-- **WeaponsList (`weapon_list.rs`)**:
-  - The `WeaponsList` struct stores a collection of all available weapons, each represented as a `WeaponEntry`.
-  - Added fields like `ammo_required`, `parts_required`, `elemental_type`, `critical_chance`, `attack_speed`, and `rarity` to capture a more detailed definition of weapons.
-  - The list includes multiple weapon categories, such as projectile-based weapons (e.g., `ASSAULT_RIFLE`), ranged weapons (e.g., `BOW`), melee weapons (e.g., `SWORD`), and spells (e.g., `FIREBALL`).
-
-- **WeaponEntry Struct**:
-  - This struct defines the properties for each individual weapon within the `WeaponsList`. It holds weapon-specific details such as `damage`, `ammo_required`, `parts_required` (list of `WeaponPart` IDs required for crafting), `range`, `weight`, and `durability`.
-
-**3. WeaponParts and Crafting Bench**
-
-- **WeaponParts (`weapon_parts.rs`)**:
-  - The `WeaponPartsList` struct contains various parts used to craft weapons. Each part, represented as a `WeaponPart`, has a unique ID (`part_id`), `name`, `description`, and `quantity`.
-  - Example parts include `AR Barrel`, `Trigger Mechanism`, `Stock`, etc. These parts are assigned unique IDs, making them easily identifiable during crafting.
-
-- **WeaponCraftingBench (`weapon_bench.rs`)**:
-  - The `WeaponCraftingBench` struct handles the actual crafting operations using weapon parts.
-  - The bench allows adding blueprints and parts, sending crafting requests to the `CraftPlugin` (`craft.rs`). This modular approach lets developers decide whether to implement the crafting mechanism within the plugin or connect to a broader crafting system.
-
-**4. Player Inventory and Storage**
-
-- **Player Inventory (`player_inventory.rs`)**:
-  - The `PlayerInventory` struct uses a HashMap to store items in fixed slots. Items are stored as `WeaponItem` structs, containing properties like `id`, `name`, `description`, `weight`, and `value`.
-  - Functions are provided for adding, removing, and managing items in the player's inventory.
-
-- **Storage Container (`storage_container.rs`)**:
-  - The `StorageContainer` struct represents in-game storage for weapons and parts, enabling players to stash items for later use.
-  - The storage uses a UUID (`uuid`) to ensure unique identification. The container itself stores a `PlayerInventory` instance that keeps track of weapon items.
-
-### Interactions Between Components
-
-**1. Crafting and Weapon Assembly**
-
-- Weapons can be crafted using `WeaponParts` combined at the `WeaponCraftingBench`. For example, crafting an `ASSAULT_RIFLE` involves combining parts like an `AR Barrel`, `Trigger Mechanism`, and `Stock`.
-- The crafting logic involves sending crafting requests to the `CraftPlugin`, where the plugin validates whether all necessary parts are present, and then successfully crafts the item.
-
-**2. Inventory Management**
-
-- Crafted weapons can be added to the player's inventory (`PlayerInventory`). The inventory maintains a list of `WeaponItems` stored in individual slots, each represented by a unique ID and containing additional metadata (e.g., `weight`, `description`, `rarity`).
-- Weapons and parts can also be stored in a `StorageContainer`. This container allows players to maintain a separate stash outside of their regular inventory, useful for managing rare weapons or for organizing parts efficiently.
-
-### Example Workflow
-
-**1. Crafting a Weapon**
-
-- A player finds or buys different `WeaponParts`.
-- These parts are placed in the `WeaponCraftingBench`, which allows the player to select a weapon blueprint (`WeaponEntry` from `WeaponsList`) to craft.
-- The crafting request is processed by `CraftPlugin`, which ensures all required parts are available.
-- Upon successful crafting, the completed weapon (`WeaponEntry`) is added to the player's inventory (`PlayerInventory`).
-
-**2. Storing and Retrieving Weapons**
-
-- Players can move their weapons to a `StorageContainer` when they need to free up inventory space or want to organize weapons separately.
-- The `StorageContainer` uses a `PlayerInventory` system to keep track of its contents. Players can add, retrieve, or remove items as needed.
-
-### Summary of New Features
-
-1. **Weapon Crafting System**:
-   - Introduced a crafting system that utilizes weapon parts (`WeaponPartsList`) to build complete weapons. Players can combine parts to create powerful, fully functional weapons.
-
-2. **Weapon Parts and Assembly**:
-   - Added `WeaponParts` and a crafting bench (`WeaponCraftingBench`) to handle the detailed assembly process of crafting weapons.
-
-3. **Enhanced Weapon Definitions**:
-   - Weapons are now defined with rich properties, including damage, range, elemental types, attack speed, rarity, and critical hit chance.
-
-4. **Inventory and Storage Systems**:
-   - Implemented a `PlayerInventory` and `StorageContainer` system, enabling flexible weapon storage, easy item management, and organized separation between active inventory and stash storage.
-
-### Full Directory Tree with Explanations
-
+```toml
+[features]
+default = ["inventory_plugin"]  # Enable built-in inventory by default
+inventory_plugin = []          # Built-in inventory system
 ```
-Horizon-Community-Edition/
-├── Weapon_Smith/
-│   ├── src/
-│   │   ├── lib.rs  # Main library entry point for Weapon_Smith plugin.
-│   │   ├── structs/
-│   │   │   ├── weapon_smith.rs  # Main struct for weapon definitions and core properties.
-│   │   │   ├── weapon_parts.rs  # List of all weapon parts that can be used in crafting.
-│   │   │   ├── weapon_list.rs  # Complete list of weapons available, including properties and parts required.
-│   │   │   ├── weapon_bench.rs  # Handles weapon crafting using parts.
-│   │   │   ├── player_inventory.rs  # Manages player's inventory of weapons and items.
-│   │   │   ├── storage_container.rs  # Represents in-game storage for weapons, parts, and inventory.
-│   │   │   ├── item.rs  # Basic weapon item structure, containing essential attributes like id, name, and value.
-│   │   ├── crafting/
-│   │   │   ├── craft.rs  # CraftPlugin responsible for handling crafting logic and processing crafting requests.
-│   │   ├── tests/
-│   │   │   ├── tests.rs  # Testing module for Weapon_Smith functionality.
-├── README.md  # Documentation file containing detailed descriptions of all changes and features.
+
+### Key Components
+
+**1. Core Plugin Integration (`lib.rs`)**
+- Implements the Plugin_API trait for integration with the main game server
+- Provides handlers for crafting requests and player events
+- Manages feature flag configurations and plugin initialization
+
+**2. Inventory Systems**
+
+The plugin offers two inventory management approaches:
+
+a) **Built-in Inventory System** (enabled via `inventory_plugin` feature)
+- Implemented in `player_inventory.rs` and `storage_container.rs`
+- Provides a complete inventory management system
+- Features:
+  - Fixed-slot inventory system
+  - Storage containers with UUID tracking
+  - Item management (add, remove, retrieve)
+  ```rust
+  #[cfg(feature = "inventory_plugin")]
+  let inventory = PlayerInventory::new(30);
+  ```
+
+b) **Horizon Inventory Integration**
+- Uses the official Horizon inventory plugin
+- Active when `inventory_plugin` feature is not enabled
+
+**3. Weapon System (`weapons_list.rs`, `weapon_parts_list.rs`)**
+- Defines all available weapons and their properties
+- Maintains a catalog of weapon parts used in crafting
+- Categories include:
+  - Projectile weapons (Assault Rifle, Shotgun, etc.)
+  - Ranged weapons (Bow, Crossbow)
+  - Melee weapons (Sword, Hammer)
+  - Spell weapons (Fireball, Lightning Bolt)
+
+**4. Item Management (`item.rs`)**
+- Defines the base WeaponItem structure
+- Handles weapon properties and attributes
+- Provides methods for item modification
+
+### Usage
+
+The plugin is automatically loaded by Horizon's plugin system. The server-side game plugin can interact with it through the Plugin_API:
+
+```rust
+// In the server-side game plugin
+
+let weapon_smith = getplugin!(weapon_smith, plugins)
+
+fn handle_crafting_request(&self, item_id: u32) -> String {
+  weapon_smith.handle_crafting_request(item_id)
+}
 ```
+
+### Plugin Dependencies
+
+When using the default configuration (no built-in inventory):
+- **Recommended**: Horizon Inventory Plugin
+  - Must be present in the plugins directory
+  - Will be loaded automatically by Horizon's plugin system and auto-detected
+
+When using built-in inventory (`inventory_plugin` feature enabled):
+- No additional plugin dependencies required
+
+### Notes for Developers
+
+- This is a server-side library - all client communication should be handled by the game plugin
+- The plugin does not directly interact with clients
+- Feature flags are configured in the plugin's own `Cargo.toml`
+- Weapon definitions and crafting logic can be extended through the provided structures
+- The plugin is loaded automatically by Horizon's plugin system
+
+### Contributing
+
+Contributions should focus on:
+- Enhancing server-side functionality
+- Improving both built-in and Horizon inventory integration
+- Adding new weapon types and crafting recipes
+- Optimizing performance and resource usage
+- Extending feature flag functionality
+- Expanding the API to allow for more complex operations such as server-side hit calculation
+
+### License
+
+Apache 2.0
