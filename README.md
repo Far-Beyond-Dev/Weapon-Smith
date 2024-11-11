@@ -129,9 +129,3 @@ Horizon-Community-Edition/
 │   │   │   ├── tests.rs  # Testing module for Weapon_Smith functionality.
 ├── README.md  # Documentation file containing detailed descriptions of all changes and features.
 ```
-
-### Conclusion
-
-The `Weapon_Smith` plugin introduces a powerful new modular system for weapon creation, management, and integration in the Horizon-Community-Edition game server. With well-defined components for crafting, parts management, weapon definitions, and player inventories, it offers a robust foundation for building complex and engaging weapon-related gameplay. Its modular design ensures that each part of the system is loosely coupled, facilitating easy updates, extension, or replacement.
-
-This documentation has covered all new features, design considerations, and interactions among the different components within `Weapon_Smith`, providing a deep understanding of its functionality and future potential. All Developers are Welcomed and Fully encouraged to extend these capabilities further, using the plugin's design to build engaging and immersive experiences.
