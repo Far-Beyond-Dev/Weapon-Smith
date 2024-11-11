@@ -135,7 +135,7 @@ When using built-in inventory (`inventory_plugin` feature enabled):
 ### Notes for Developers
 
 - This is a server-side library - all client communication should be handled by the game plugin
-- The plugin does not directly interact with clients
+- The plugin does not directly interact with clients as is (This is primarily for security reasons)
 - Feature flags are configured in the plugin's own `Cargo.toml`
 - Weapon definitions and crafting logic can be extended through the provided structures
 - The plugin is loaded automatically by Horizon's plugin system
